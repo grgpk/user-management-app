@@ -1,0 +1,26 @@
+.header {
+  background-color: brown;
+  height: 4em;
+}
+
+.nav {
+  height: 100%;
+}
+
+.nav-list {
+  margin: 0;
+  padding: 0;
+  width: 20em;
+  height: 100%;
+  list-style: none;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.nav-link {
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: rgb(7, 10, 164);
+}
