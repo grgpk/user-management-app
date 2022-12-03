@@ -1,1 +1,45 @@
-<p>categories works!</p>
+<section class="categories-section" *ngIf="categories$ | async as categories">
+  <button (click)="addCategory()" class="btn-add" mat-raised-button>Add</button>
+  <mat-form-field class="filter">
+    <input (keyup)="filter($event)" matInput type="text" placeholder="Filter" />
+  </mat-form-field>
+  <table class="categories-table mat-elevation-z8">
+    <thead>
+      <tr>
+        <th class="title">Category</th>
+        <th class="title">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="row" *ngFor="let category of categories.categories">
+        <td class="cell">{{ category.name }}</td>
+        <td class="cell actions">
+          <button
+            color="primary"
+            class="btn-edit"
+            (click)="updateCategory(category)"
+            mat-stroked-button
+          >
+            Edit
+          </button>
+          <button
+            color="warn"
+            (click)="removeCategory(category)"
+            mat-stroked-button
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <app-pagination
+    [currentPage]="currentPage"
+    [limit]="categories.limit"
+    [url]="baseUrl"
+    [total]="categories.total"
+  ></app-pagination>
+</section>
+<div class="loading-spinner" *ngIf="!(categories$ | async)">
+  <app-loading-spinner></app-loading-spinner>
+</div>

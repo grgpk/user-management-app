@@ -1,1 +1,45 @@
-<p>statuses works!</p>
+<div class="loading-spinner" *ngIf="!(statuses$ | async)">
+  <app-loading-spinner></app-loading-spinner>
+</div>
+<section class="statuses-section" *ngIf="statuses$ | async as statuses">
+  <button (click)="addStatus()" class="btn-add" mat-raised-button>Add</button>
+  <mat-form-field class="filter">
+    <input (keyup)="filter($event)" matInput type="text" placeholder="Filter" />
+  </mat-form-field>
+  <table class="statuses-table mat-elevation-z8">
+    <thead>
+      <tr>
+        <th class="title">Status</th>
+        <th class="title">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="row" *ngFor="let status of statuses.statuses">
+        <td class="cell">{{ status.name }}</td>
+        <td class="cell actions">
+          <button
+            color="primary"
+            class="btn-edit"
+            (click)="updateStatus(status)"
+            mat-stroked-button
+          >
+            Edit
+          </button>
+          <button
+            color="warn"
+            (click)="removeStatus(status)"
+            mat-stroked-button
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <app-pagination
+    [currentPage]="currentPage"
+    [limit]="statuses.limit"
+    [url]="baseUrl"
+    [total]="statuses.total"
+  ></app-pagination>
+</section>

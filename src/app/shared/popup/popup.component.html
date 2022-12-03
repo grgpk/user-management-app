@@ -1,0 +1,47 @@
+<div *ngIf="data.type === 'add'">
+  <mat-form-field>
+    <input
+      matInput
+      type="text"
+      [placeholder]="data.page === 'status' ? 'Status' : 'Category name'"
+      #input
+    />
+  </mat-form-field>
+  <mat-dialog-actions>
+    <button
+      mat-raised-button
+      [mat-dialog-close]="input.value"
+      [disabled]="!input.value"
+    >
+      Add
+    </button>
+  </mat-dialog-actions>
+</div>
+
+<div *ngIf="data.type === 'edit'">
+  <mat-form-field>
+    <input
+      matInput
+      type="text"
+      [ngModel]="
+        data.page === 'category' ? data.category.name : data.status.name
+      "
+      [placeholder]="
+        data.page === 'status' ? 'Change Status' : 'Change Category'
+      "
+      #input
+    />
+  </mat-form-field>
+  <mat-dialog-actions>
+    <button
+      [disabled]="!input.value"
+      mat-raised-button
+      [mat-dialog-close]="{
+        _id: data.page === 'category' ? data.category._id : data.status._id,
+        name: input.value
+      }"
+    >
+      Update
+    </button>
+  </mat-dialog-actions>
+</div>

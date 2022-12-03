@@ -1,5 +1,5 @@
 .header {
-  background-color: brown;
+  background-color: rgb(17, 17, 158);
   height: 4em;
 }
 
@@ -22,5 +22,9 @@
   font-size: 1rem;
   font-weight: 700;
   text-decoration: none;
-  color: rgb(7, 10, 164);
+  color: white;
+}
+
+.active {
+  color: chartreuse;
 }

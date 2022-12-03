@@ -1,0 +1,21 @@
+.pages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2em;
+  min-height: 80px;
+  list-style: none;
+  padding: 0;
+}
+
+.page-link {
+  padding: 0.5em 0.7em;
+  background-color: rgb(11, 83, 250);
+  color: white;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.page-link.active {
+  background-color: rgb(15, 182, 15);
+}
+
