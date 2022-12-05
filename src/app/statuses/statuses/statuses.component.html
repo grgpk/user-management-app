@@ -1,7 +1,7 @@
-<div class="loading-spinner" *ngIf="!(statuses$ | async)">
-  <app-loading-spinner></app-loading-spinner>
-</div>
+<app-loading-spinner *ngIf="!(statuses$ | async)"></app-loading-spinner>
+
 <section class="statuses-section" *ngIf="statuses$ | async as statuses">
+  <h1 class="page-title">Statuses</h1>
   <button (click)="addStatus()" class="btn-add" mat-raised-button>Add</button>
   <mat-form-field class="filter">
     <input (keyup)="filter($event)" matInput type="text" placeholder="Filter" />

@@ -1,19 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { filter, mergeMap, Observable, of, Subscription } from 'rxjs';
+import { mergeMap, Observable, of, Subscription } from 'rxjs';
 import { CategoryService } from 'src/app/categories/services/category.service';
 
 import { Category } from 'src/app/models/category.interface';
 import { categoryResponse } from 'src/app/models/categoryResponse.interface';
 import { PopupComponent } from 'src/app/shared/popup/popup.component';
-
-const mockData = [
-  { name: 'vip user', id: 1 },
-  { name: 'idle user', id: 2 },
-  { name: 'blocked user', id: 3 },
-  { name: 'super user', id: 4 },
-];
 
 @Component({
   selector: 'app-categories',
@@ -39,20 +32,21 @@ export class CategoriesComponent implements OnInit, OnDestroy {
     this.paramsSubscription = this.route.queryParams.subscribe(
       (params: Params) => {
         this.currentPage = Number(params['page'] || '1');
-        this.getCategories();
+        this.categories$ = this.getCategories();
       }
     );
 
     this.baseUrl = this.router.url.split('?')[0];
   }
 
-  getCategories(): void {
-    this.categories$ = this.categoryService.getCategories(this.currentPage);
+  getCategories(): Observable<categoryResponse> {
+    return this.categoryService.getCategories(this.currentPage);
   }
 
   removeCategory(category: Category) {
-    this.categoryService.removeCategory(category).subscribe(() => {
-      this.getCategories();
+    this.categoryService.removeCategory(category).subscribe((result) => {
+      console.log(result);
+      this.categories$ = this.getCategories();
     });
   }
   addCategory(): void {
@@ -71,7 +65,7 @@ export class CategoriesComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe(() => {
-        this.getCategories();
+        this.categories$ = this.getCategories();
       });
   }
 
@@ -95,7 +89,7 @@ export class CategoriesComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe(() => {
-        this.getCategories();
+        this.categories$ = this.getCategories();
       });
   }
 

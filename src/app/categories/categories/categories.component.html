@@ -1,4 +1,5 @@
 <section class="categories-section" *ngIf="categories$ | async as categories">
+  <h1 class="page-title">Categories</h1>
   <button (click)="addCategory()" class="btn-add" mat-raised-button>Add</button>
   <mat-form-field class="filter">
     <input (keyup)="filter($event)" matInput type="text" placeholder="Filter" />
@@ -40,6 +41,5 @@
     [total]="categories.total"
   ></app-pagination>
 </section>
-<div class="loading-spinner" *ngIf="!(categories$ | async)">
-  <app-loading-spinner></app-loading-spinner>
-</div>
+
+<app-loading-spinner *ngIf="!(categories$ | async)"></app-loading-spinner>

@@ -1,6 +1,11 @@
 .categories-section {
-  margin: 5em auto;
+  margin: 3em auto;
   width: 50%;
+}
+
+.page-title {
+  color: rgb(2, 2, 213);
+  font-weight: 700;
 }
 
 .categories-table {
@@ -30,12 +35,4 @@
 .filter {
   width: 80%;
   margin-left: 1.5em;
-}
-
-.loading-spinner {
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }

@@ -1,0 +1,32 @@
+.user-details {
+  padding: 1.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+}
+
+.page-title {
+  color: rgb(2, 2, 213);
+  font-weight: 700;
+}
+
+.user-details-table {
+  min-width: 50vw;
+  border-collapse: collapse;
+}
+
+.cell, .title {
+  text-align: left;
+  padding: 1em;
+  border: 1px solid #ddd;
+}
+
+.row:hover {
+  background-color: rgb(238, 237, 237);
+  transition: background-color 0.2s;
+}
+
+button {
+  margin: 0.3em;
+}

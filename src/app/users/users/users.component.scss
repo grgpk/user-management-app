@@ -1,0 +1,17 @@
+.users-section {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  padding-block: 1em;
+}
+
+.users-table {
+  width: 80vw;
+}
+
+.page-title {
+  color: rgb(2, 2, 213);
+  font-weight: 700;
+}
+
