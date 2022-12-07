@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { Observable, Subscription, mergeMap, of } from 'rxjs';
+import { Observable, mergeMap, of, takeUntil } from 'rxjs';
 import { Category } from 'src/app/models/category.interface';
 import { Status } from 'src/app/models/status.interface';
 import { statusResponse } from 'src/app/models/statusResponse.interface';
 import { PopupComponent } from 'src/app/shared/popup/popup.component';
+import { Unsubscribe } from 'src/app/shared/utils/unsubscribe.class';
 import { StatusService } from 'src/app/statuses/services/status.service';
 
 @Component({
@@ -13,12 +14,10 @@ import { StatusService } from 'src/app/statuses/services/status.service';
   templateUrl: './statuses.component.html',
   styleUrls: ['./statuses.component.scss'],
 })
-export class StatusesComponent implements OnInit {
+export class StatusesComponent extends Unsubscribe implements OnInit {
   statuses$!: Observable<statusResponse>;
   currentPage!: number;
-  paramsSubscription!: Subscription;
   baseUrl!: string;
-
   displayedColumns: string[] = ['id', 'name'];
 
   constructor(
@@ -26,15 +25,17 @@ export class StatusesComponent implements OnInit {
     private statusService: StatusService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
-    this.paramsSubscription = this.route.queryParams.subscribe(
-      (params: Params) => {
+    this.route.queryParams
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((params: Params) => {
         this.currentPage = Number(params['page'] || '1');
         this.getstatuses();
-      }
-    );
+      });
 
     this.baseUrl = this.router.url.split('?')[0];
   }
@@ -44,9 +45,12 @@ export class StatusesComponent implements OnInit {
   }
 
   removeStatus(category: Category) {
-    this.statusService.removeStatus(category).subscribe(() => {
-      this.getstatuses();
-    });
+    this.statusService
+      .removeStatus(category)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.getstatuses();
+      });
   }
   addStatus(): void {
     this.matDialog
@@ -61,7 +65,8 @@ export class StatusesComponent implements OnInit {
           } else {
             return of();
           }
-        })
+        }),
+        takeUntil(this.unsubscribe$)
       )
       .subscribe(() => {
         this.getstatuses();
@@ -81,7 +86,8 @@ export class StatusesComponent implements OnInit {
           } else {
             return of();
           }
-        })
+        }),
+        takeUntil(this.unsubscribe$)
       )
       .subscribe(() => {
         this.getstatuses();
@@ -89,12 +95,6 @@ export class StatusesComponent implements OnInit {
   }
 
   filter(event: KeyboardEvent) {
-    // this.statuses = mockData.filter((category) =>
-    //   category.name.includes((event.target as HTMLInputElement).value)
-    // );
-  }
-
-  ngOnDestroy(): void {
-    this.paramsSubscription && this.paramsSubscription.unsubscribe();
+    this.statusService.getFilterInput((event.target as HTMLInputElement).value);
   }
 }

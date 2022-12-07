@@ -10,8 +10,17 @@
   width: 80vw;
 }
 
+th {
+  font-weight: 900;
+  color: black;
+}
+
 .page-title {
   color: rgb(2, 2, 213);
   font-weight: 700;
 }
-
+@media screen and (max-width: 800px) {
+  .users-table {
+    width: 100vw;
+  }
+}

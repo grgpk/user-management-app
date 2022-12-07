@@ -1,7 +1,8 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import { User } from 'src/app/models/user.interface';
+import { Unsubscribe } from 'src/app/shared/utils/unsubscribe.class';
 import { UserService } from 'src/app/users/services/user.service';
 
 @Component({
@@ -9,13 +10,15 @@ import { UserService } from 'src/app/users/services/user.service';
   templateUrl: './new-user.component.html',
   styleUrls: ['./new-user.component.scss'],
 })
-export class NewUserComponent implements OnDestroy {
-  userSubscription!: Subscription;
-  constructor(private userService: UserService, private router: Router) {}
+export class NewUserComponent extends Unsubscribe {
+  constructor(private userService: UserService, private router: Router) {
+    super();
+  }
 
   createUser(user: User): void {
-    this.userSubscription = this.userService
+    this.userService
       .addUser(user)
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe((result) => {
         if (!result.error) {
           alert(
@@ -24,9 +27,5 @@ export class NewUserComponent implements OnDestroy {
           this.router.navigate(['users']);
         }
       });
-  }
-
-  ngOnDestroy(): void {
-    this.userSubscription && this.userSubscription.unsubscribe();
   }
 }

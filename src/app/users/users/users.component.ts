@@ -1,24 +1,22 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, takeUntil } from 'rxjs';
 
 import { User } from 'src/app/models/user.interface';
 import { UserService } from 'src/app/users/services/user.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { Unsubscribe } from 'src/app/shared/utils/unsubscribe.class';
 
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss'],
 })
-export class UsersComponent implements OnInit, OnDestroy {
-  // dataSource!: User;
-  // displayedColumns = this.columns.map(c => c.columnDef);
-  users!: MatTableDataSource<User>;
+export class UsersComponent extends Unsubscribe implements OnInit, OnDestroy {
+  users = new MatTableDataSource<User>();
   currentPage!: number;
-  paramsSubscription!: Subscription;
-  usersSubscription!: Subscription;
-  baseUrl!: string;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   displayedColumns = [
     'Firstname',
@@ -28,27 +26,30 @@ export class UsersComponent implements OnInit, OnDestroy {
     'Birth Date',
     'Category',
     'Status',
-    'Actions',
+    'Details',
   ];
 
   constructor(
     private userService: UserService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
-    this.paramsSubscription = this.route.queryParams.subscribe(
-      (params: Params) => {
+    this.route.queryParams
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((params: Params) => {
         this.currentPage = Number(params['page'] || '1');
-      }
-    );
+      });
 
-    this.usersSubscription = this.getUsers().subscribe((users) => {
-      this.users = new MatTableDataSource(users);
-    });
-
-    this.baseUrl = this.router.url.split('?')[0];
+    this.getUsers()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((users) => {
+        this.users.data = users;
+        this.users.paginator = this.paginator;
+      });
   }
 
   getUsers(): Observable<User[]> {
@@ -61,11 +62,6 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   goToDetails(id: number) {
-    this.router.navigate([this.baseUrl, id]);
-  }
-
-  ngOnDestroy(): void {
-    this.paramsSubscription && this.paramsSubscription.unsubscribe();
-    this.usersSubscription && this.usersSubscription.unsubscribe();
+    this.router.navigate(['users', id]);
   }
 }

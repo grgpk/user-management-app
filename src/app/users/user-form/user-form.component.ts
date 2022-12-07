@@ -1,5 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { Category } from 'src/app/models/category.interface';
+import { Status } from 'src/app/models/status.interface';
 
 import { User } from '../../models/user.interface';
 
@@ -14,6 +17,9 @@ export class UserFormComponent implements OnInit {
 
   @Input() formType!: 'edit' | 'create';
   @Input() user!: User;
+
+  statuses$!: Observable<Status[]>;
+  categories$!: Observable<Category[]>;
 
   firstName = new FormControl('', [Validators.required]);
   lastName = new FormControl('', [Validators.required]);
@@ -34,7 +40,7 @@ export class UserFormComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    if (this.user) {
+    if (this.user && this.formType === 'edit') {
       const user: User = {
         firstName: this.user.firstName,
         lastName: this.user.lastName,
@@ -45,6 +51,10 @@ export class UserFormComponent implements OnInit {
         birthDate: this.user.birthDate,
       };
       this.userForm.setValue(user);
+    }
+
+    if(this.formType === 'create') {
+      this.statuses$
     }
   }
 

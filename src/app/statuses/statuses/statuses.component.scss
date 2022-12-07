@@ -1,5 +1,5 @@
 .statuses-section {
-  margin: 5em auto;
+  margin: 3em auto;
   width: 50%;
 }
 
@@ -43,4 +43,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@media screen and (max-width: 800px) {
+  .statuses-section {
+    margin: 1em auto;
+    width: 80%;
+  }
+
+  .page-title {
+    font-size: 1rem;
+  }
+
+  .filter {
+    width: 70%;
+    margin-left: 1.5em;
+  }
 }

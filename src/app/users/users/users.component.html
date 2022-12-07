@@ -6,62 +6,66 @@
     <mat-label>Filter</mat-label>
     <input matInput (keyup)="onFilter($event)" #input />
   </mat-form-field>
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="users" class="users-table">
+      <ng-container matColumnDef="Firstname">
+        <th mat-header-cell *matHeaderCellDef>Firstname</th>
+        <td mat-cell *matCellDef="let element">{{ element.firstName }}</td>
+      </ng-container>
 
-  <table mat-table [dataSource]="users" class="mat-elevation-z8 users-table">
-    <ng-container matColumnDef="Firstname">
-      <th mat-header-cell *matHeaderCellDef>Firstname</th>
-      <td mat-cell *matCellDef="let element">{{ element.firstName }}</td>
-    </ng-container>
+      <ng-container matColumnDef="Lastname">
+        <th mat-header-cell *matHeaderCellDef>Lastname</th>
+        <td mat-cell *matCellDef="let element">{{ element.lastName }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="Lastname">
-      <th mat-header-cell *matHeaderCellDef>Lastname</th>
-      <td mat-cell *matCellDef="let element">{{ element.lastName }}</td>
-    </ng-container>
+      <ng-container matColumnDef="Email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let element">{{ element.email }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="Email">
-      <th mat-header-cell *matHeaderCellDef>Email</th>
-      <td mat-cell *matCellDef="let element">{{ element.email }}</td>
-    </ng-container>
+      <ng-container matColumnDef="Personal Number">
+        <th mat-header-cell *matHeaderCellDef>Personal Number</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.personalNumber }}
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="Personal Number">
-      <th mat-header-cell *matHeaderCellDef>Personal Number</th>
-      <td mat-cell *matCellDef="let element">{{ element.personalNumber }}</td>
-    </ng-container>
+      <ng-container matColumnDef="Birth Date">
+        <th mat-header-cell *matHeaderCellDef>Birth Date</th>
+        <td mat-cell *matCellDef="let element">{{ element.birthDate }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="Birth Date">
-      <th mat-header-cell *matHeaderCellDef>Birth Date</th>
-      <td mat-cell *matCellDef="let element">{{ element.birthDate }}</td>
-    </ng-container>
+      <ng-container matColumnDef="Category">
+        <th mat-header-cell *matHeaderCellDef>Category</th>
+        <td mat-cell *matCellDef="let element">{{ element.category }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="Category">
-      <th mat-header-cell *matHeaderCellDef>Category</th>
-      <td mat-cell *matCellDef="let element">{{ element.category }}</td>
-    </ng-container>
+      <ng-container matColumnDef="Status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let element">{{ element.status }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="Status">
-      <th mat-header-cell *matHeaderCellDef>Status</th>
-      <td mat-cell *matCellDef="let element">{{ element.status }}</td>
-    </ng-container>
+      <ng-container matColumnDef="Details">
+        <th mat-header-cell *matHeaderCellDef>Details</th>
+        <td mat-cell *matCellDef="let element">
+          <button
+            color="primary"
+            (click)="goToDetails(element._id)"
+            mat-stroked-button
+          >
+            Details
+          </button>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="Actions">
-      <th mat-header-cell *matHeaderCellDef>Actions</th>
-      <td mat-cell *matCellDef="let element">
-        <button
-          color="primary"
-          (click)="goToDetails(element._id)"
-          mat-stroked-button
-        >
-          Details
-        </button>
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" colspan="4">
-        No data matching the filter "{{ input.value }}"
-      </td>
-    </tr>
-  </table>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">
+          No data matching the filter "{{ input.value }}"
+        </td>
+      </tr>
+    </table>
+    <mat-paginator showFirstLastButtons [pageSize]="5"></mat-paginator>
+  </div>
 </section>

@@ -36,3 +36,19 @@
   width: 80%;
   margin-left: 1.5em;
 }
+
+@media screen and (max-width: 800px) {
+  .categories-section {
+    margin: 1em auto;
+    width: 80%;
+  }
+
+  .page-title {
+    font-size: 1rem;
+  }
+
+  .filter {
+    width: 70%;
+    margin-left: 1.5em;
+  }
+}

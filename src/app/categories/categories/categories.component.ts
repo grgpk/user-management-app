@@ -1,24 +1,26 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { mergeMap, Observable, of, Subscription } from 'rxjs';
+import { mergeMap, Observable, of, takeUntil } from 'rxjs';
 import { CategoryService } from 'src/app/categories/services/category.service';
 
 import { Category } from 'src/app/models/category.interface';
 import { categoryResponse } from 'src/app/models/categoryResponse.interface';
 import { PopupComponent } from 'src/app/shared/popup/popup.component';
+import { Unsubscribe } from 'src/app/shared/utils/unsubscribe.class';
 
 @Component({
   selector: 'app-categories',
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.scss'],
 })
-export class CategoriesComponent implements OnInit, OnDestroy {
+export class CategoriesComponent
+  extends Unsubscribe
+  implements OnInit, OnDestroy
+{
   categories$!: Observable<categoryResponse>;
   currentPage!: number;
-  paramsSubscription!: Subscription;
   baseUrl!: string;
-
   displayedColumns: string[] = ['id', 'name'];
 
   constructor(
@@ -26,15 +28,17 @@ export class CategoriesComponent implements OnInit, OnDestroy {
     private categoryService: CategoryService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
-    this.paramsSubscription = this.route.queryParams.subscribe(
-      (params: Params) => {
+    this.route.queryParams
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((params: Params) => {
         this.currentPage = Number(params['page'] || '1');
         this.categories$ = this.getCategories();
-      }
-    );
+      });
 
     this.baseUrl = this.router.url.split('?')[0];
   }
@@ -44,11 +48,14 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   }
 
   removeCategory(category: Category) {
-    this.categoryService.removeCategory(category).subscribe((result) => {
-      console.log(result);
-      this.categories$ = this.getCategories();
-    });
+    this.categoryService
+      .removeCategory(category)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.categories$ = this.getCategories();
+      });
   }
+
   addCategory(): void {
     this.matDialog
       .open(PopupComponent, {
@@ -62,7 +69,8 @@ export class CategoriesComponent implements OnInit, OnDestroy {
           } else {
             return of();
           }
-        })
+        }),
+        takeUntil(this.unsubscribe$)
       )
       .subscribe(() => {
         this.categories$ = this.getCategories();
@@ -86,7 +94,8 @@ export class CategoriesComponent implements OnInit, OnDestroy {
           } else {
             return of();
           }
-        })
+        }),
+        takeUntil(this.unsubscribe$)
       )
       .subscribe(() => {
         this.categories$ = this.getCategories();
@@ -94,12 +103,8 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   }
 
   filter(event: KeyboardEvent) {
-    // this.categories = mockData.filter((category) =>
-    //   category.name.includes((event.target as HTMLInputElement).value)
-    // );
-  }
-
-  ngOnDestroy(): void {
-    this.paramsSubscription && this.paramsSubscription.unsubscribe();
+    this.categoryService.getFilterInput(
+      (event.target as HTMLInputElement).value
+    );
   }
 }

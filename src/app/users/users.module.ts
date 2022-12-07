@@ -12,6 +12,7 @@ import { UserFormComponent } from './user-form/user-form.component';
 import { NewUserComponent } from './new-user/new-user.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 const routes: Routes = [
   { path: '', redirectTo: 'users', pathMatch: 'full' },
@@ -36,6 +37,7 @@ const routes: Routes = [
     MatSelectModule,
     ReactiveFormsModule,
     SharedModule,
+    MatPaginatorModule,
     RouterModule.forChild(routes),
   ],
 })

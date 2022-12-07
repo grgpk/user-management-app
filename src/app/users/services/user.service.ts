@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { User } from 'src/app/models/user.interface';
+import { UserResponse } from 'src/app/models/userResponse.interface';
 
 @Injectable({
   providedIn: 'root',
