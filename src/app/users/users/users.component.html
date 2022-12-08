@@ -39,7 +39,9 @@
 
       <ng-container matColumnDef="Birth Date">
         <th mat-header-cell *matHeaderCellDef>Birth Date</th>
-        <td mat-cell *matCellDef="let element">{{ element.birthDate }}</td>
+        <td mat-cell *matCellDef="let element">
+          {{ element.birthDate | date : "dd/MM/yyyy" }}
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="Category">
