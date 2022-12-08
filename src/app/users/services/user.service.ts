@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { User } from 'src/app/models/user.interface';
-import { UserResponse } from 'src/app/models/userResponse.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   private apiUrl = 'http://localhost:3000/users';
+  private optionsUrl = 'http://localhost:3000/options';
+
   constructor(private http: HttpClient) {}
 
   getUsers(page: number): Observable<User[]> {
@@ -38,5 +39,9 @@ export class UserService {
 
   addUser(user: User): Observable<any> {
     return this.http.post<User>(this.apiUrl + '/add', user);
+  }
+
+  getStatusesAndCategories(): Observable<any> {
+    return this.http.get(this.optionsUrl);
   }
 }

@@ -19,12 +19,16 @@ export class PaginationComponent implements OnInit {
 
   ngOnInit(): void {
     this.pagesCount = Math.ceil(this.total / this.limit);
-    this.pages = [...Array(this.pagesCount).keys()].map((el) => el + 1);
+    this.pages = this.getRange(1, this.pagesCount);
     this.navigateToPreviousPage();
   }
 
+  getRange(start: number, end: number): number[] {
+    return [...Array(end).keys()].map((el) => el + start);
+  }
+
   navigateToPreviousPage(): void {
-    if (this.pagesCount < this.currentPage) {
+    if (this.pagesCount < this.currentPage && this.currentPage > 1) {
       this.router.navigateByUrl(this.url + `?page=${this.currentPage - 1}`);
     }
   }

@@ -1,7 +1,9 @@
+import { Category } from 'src/app/models/category.interface';
+import { Status } from 'src/app/models/status.interface';
 import { User } from 'src/app/models/user.interface';
 
 export interface UserResponse {
-  total: number;
+  statuses: Status[];
   users: User[];
-  limit: number;
+  categories: Category[];
 }

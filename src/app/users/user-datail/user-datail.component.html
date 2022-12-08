@@ -1,16 +1,14 @@
-<section class="user-details" *ngIf="user">
+<section class="user-details" *ngIf="!isLoading">
   <h1 class="page-title">User {{ user.firstName }} {{ user.lastName }}</h1>
   <div>
-    <button (click)="newUser()" color="accent" type="button" mat-raised-button>
-      New User
-    </button>
-    <button (click)="removeUser()" color="warn" type="button" mat-raised-button>
-      Remove
-    </button>
     <app-user-form
       [user]="user"
       (userUpdateEvent)="updateUser($event)"
       formType="edit"
     ></app-user-form>
+    <button (click)="removeUser()" color="warn" type="button" mat-raised-button>
+      Remove
+    </button>
   </div>
 </section>
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>

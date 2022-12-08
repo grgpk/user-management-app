@@ -1,12 +1,19 @@
-<app-loading-spinner *ngIf="!users"></app-loading-spinner>
-<section class="users-section" *ngIf="users">
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<section class="users-section" *ngIf="!isLoading">
   <h1 class="page-title">Users</h1>
 
-  <mat-form-field>
+  <button (click)="newUser()" color="accent" type="button" mat-raised-button>
+    New User
+  </button>
+  <p class="no-data" *ngIf="users.data.length === 0">
+    No Users Found, please add!
+  </p>
+  <mat-form-field *ngIf="users.data.length > 0">
     <mat-label>Filter</mat-label>
-    <input matInput (keyup)="onFilter($event)" #input />
+    <input matInput (keyup)="onFilter($event)" />
   </mat-form-field>
-  <div class="mat-elevation-z8">
+
+  <div *ngIf="users.data.length > 0" class="mat-elevation-z8">
     <table mat-table [dataSource]="users" class="users-table">
       <ng-container matColumnDef="Firstname">
         <th mat-header-cell *matHeaderCellDef>Firstname</th>
@@ -60,11 +67,11 @@
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="4">
-          No data matching the filter "{{ input.value }}"
-        </td>
-      </tr>
+      <ng-container *ngIf="users.data.length > 0">
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">No data matching the filter</td>
+        </tr>
+      </ng-container>
     </table>
     <mat-paginator showFirstLastButtons [pageSize]="5"></mat-paginator>
   </div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Observable, mergeMap, of, takeUntil } from 'rxjs';
+
 import { Category } from 'src/app/models/category.interface';
 import { Status } from 'src/app/models/status.interface';
 import { statusResponse } from 'src/app/models/statusResponse.interface';
@@ -19,6 +20,7 @@ export class StatusesComponent extends Unsubscribe implements OnInit {
   currentPage!: number;
   baseUrl!: string;
   displayedColumns: string[] = ['id', 'name'];
+  isLoading: boolean = false;
 
   constructor(
     private matDialog: MatDialog,
@@ -30,11 +32,13 @@ export class StatusesComponent extends Unsubscribe implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.route.queryParams
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((params: Params) => {
         this.currentPage = Number(params['page'] || '1');
         this.getstatuses();
+        this.isLoading = false;
       });
 
     this.baseUrl = this.router.url.split('?')[0];
@@ -45,13 +49,18 @@ export class StatusesComponent extends Unsubscribe implements OnInit {
   }
 
   removeStatus(category: Category) {
+    this.isLoading = true;
     this.statusService
       .removeStatus(category)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(() => {
-        this.getstatuses();
+      .subscribe({
+        next: () => {
+          this.getstatuses();
+          this.isLoading = false;
+        },
       });
   }
+
   addStatus(): void {
     this.matDialog
       .open(PopupComponent, {
@@ -60,6 +69,7 @@ export class StatusesComponent extends Unsubscribe implements OnInit {
       .afterClosed()
       .pipe(
         mergeMap((data: string) => {
+          this.isLoading = true;
           if (data) {
             return this.statusService.addStatus({ name: data });
           } else {
@@ -68,8 +78,11 @@ export class StatusesComponent extends Unsubscribe implements OnInit {
         }),
         takeUntil(this.unsubscribe$)
       )
-      .subscribe(() => {
-        this.getstatuses();
+      .subscribe({
+        next: () => {
+          this.getstatuses();
+          this.isLoading = false;
+        },
       });
   }
 
@@ -81,6 +94,7 @@ export class StatusesComponent extends Unsubscribe implements OnInit {
       .afterClosed()
       .pipe(
         mergeMap((updatedStatus: Category) => {
+          this.isLoading = true;
           if (updatedStatus) {
             return this.statusService.updateStatus(updatedStatus);
           } else {
@@ -89,8 +103,11 @@ export class StatusesComponent extends Unsubscribe implements OnInit {
         }),
         takeUntil(this.unsubscribe$)
       )
-      .subscribe(() => {
-        this.getstatuses();
+      .subscribe({
+        next: () => {
+          this.getstatuses();
+          this.isLoading = false;
+        },
       });
   }
 

@@ -1,45 +1,56 @@
-<app-loading-spinner *ngIf="!(statuses$ | async)"></app-loading-spinner>
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<section class="statuses-section" *ngIf="statuses$ | async as statuses">
-  <h1 class="page-title">Statuses</h1>
-  <button (click)="addStatus()" class="btn-add" mat-raised-button>Add</button>
-  <mat-form-field class="filter">
-    <input (keyup)="filter($event)" matInput type="text" placeholder="Filter" />
-  </mat-form-field>
-  <table class="statuses-table mat-elevation-z8">
-    <thead>
-      <tr>
-        <th class="title">Status</th>
-        <th class="title">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="row" *ngFor="let status of statuses.statuses">
-        <td class="cell">{{ status.name }}</td>
-        <td class="cell actions">
-          <button
-            color="primary"
-            class="btn-edit"
-            (click)="updateStatus(status)"
-            mat-stroked-button
-          >
-            Edit
-          </button>
-          <button
-            color="warn"
-            (click)="removeStatus(status)"
-            mat-stroked-button
-          >
-            Delete
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <app-pagination
-    [currentPage]="currentPage"
-    [limit]="statuses.limit"
-    [url]="baseUrl"
-    [total]="statuses.total"
-  ></app-pagination>
+<section *ngIf="!isLoading" class="statuses-section">
+  <ng-container *ngIf="statuses$ | async as statuses">
+    <h1 class="page-title">Statuses</h1>
+    <button (click)="addStatus()" class="btn-add" mat-raised-button>Add</button>
+    <p *ngIf="statuses.statuses.length === 0">No Status Found, please add!</p>
+    <mat-form-field *ngIf="statuses.statuses.length > 0" class="filter">
+      <input
+        (keyup)="filter($event)"
+        matInput
+        type="text"
+        placeholder="Filter"
+      />
+    </mat-form-field>
+    <table
+      *ngIf="statuses.statuses.length > 0"
+      class="statuses-table mat-elevation-z8"
+    >
+      <thead>
+        <tr>
+          <th class="title">Status</th>
+          <th class="title">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row" *ngFor="let status of statuses.statuses">
+          <td class="cell">{{ status.name }}</td>
+          <td class="cell actions">
+            <button
+              color="primary"
+              class="btn-edit"
+              (click)="updateStatus(status)"
+              mat-stroked-button
+            >
+              Edit
+            </button>
+            <button
+              color="warn"
+              (click)="removeStatus(status)"
+              mat-stroked-button
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <app-pagination
+      [currentPage]="currentPage"
+      [limit]="statuses.limit"
+      [url]="baseUrl"
+      [total]="statuses.total"
+    ></app-pagination>
+  </ng-container>
 </section>

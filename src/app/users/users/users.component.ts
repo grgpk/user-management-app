@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 import { Observable, takeUntil } from 'rxjs';
 
 import { User } from 'src/app/models/user.interface';
 import { UserService } from 'src/app/users/services/user.service';
-import { MatPaginator } from '@angular/material/paginator';
 import { Unsubscribe } from 'src/app/shared/utils/unsubscribe.class';
 
 @Component({
@@ -17,6 +17,7 @@ export class UsersComponent extends Unsubscribe implements OnInit, OnDestroy {
   users = new MatTableDataSource<User>();
   currentPage!: number;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  isLoading: boolean = false;
 
   displayedColumns = [
     'Firstname',
@@ -38,6 +39,7 @@ export class UsersComponent extends Unsubscribe implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.route.queryParams
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((params: Params) => {
@@ -49,6 +51,7 @@ export class UsersComponent extends Unsubscribe implements OnInit, OnDestroy {
       .subscribe((users) => {
         this.users.data = users;
         this.users.paginator = this.paginator;
+        this.isLoading = false;
       });
   }
 
@@ -63,5 +66,9 @@ export class UsersComponent extends Unsubscribe implements OnInit, OnDestroy {
 
   goToDetails(id: number) {
     this.router.navigate(['users', id]);
+  }
+
+  newUser(): void {
+    this.router.navigate(['users', 'add']);
   }
 }

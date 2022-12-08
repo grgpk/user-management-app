@@ -19,6 +19,11 @@ th {
   color: rgb(2, 2, 213);
   font-weight: 700;
 }
+
+.no-data {
+  margin: 1em;
+}
+
 @media screen and (max-width: 800px) {
   .users-table {
     width: 100vw;

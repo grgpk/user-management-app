@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
+
 import { Category } from 'src/app/models/category.interface';
 import { Status } from 'src/app/models/status.interface';
-
+import { UserService } from 'src/app/users/services/user.service';
 import { User } from '../../models/user.interface';
 
 @Component({
@@ -18,26 +19,24 @@ export class UserFormComponent implements OnInit {
   @Input() formType!: 'edit' | 'create';
   @Input() user!: User;
 
-  statuses$!: Observable<Status[]>;
-  categories$!: Observable<Category[]>;
+  options$:
+    | Observable<{ statuses: Status[]; categories: Category[] }>
+    | undefined;
 
-  firstName = new FormControl('', [Validators.required]);
-  lastName = new FormControl('', [Validators.required]);
-  email = new FormControl('', [Validators.required, Validators.email]);
-  personalNumber = new FormControl('', [Validators.required]);
-  birthDate = new FormControl('', [Validators.required]);
-  status = new FormControl('', [Validators.required]);
-  category = new FormControl('', [Validators.required]);
-
-  userForm = new FormGroup({
-    firstName: this.firstName,
-    lastName: this.lastName,
-    email: this.email,
-    personalNumber: this.personalNumber,
-    birthDate: this.birthDate,
-    status: this.status,
-    category: this.category,
+  userForm = this.formBuilder.group({
+    firstName: ['', [Validators.required]],
+    lastName: ['', [Validators.required]],
+    email: ['', [Validators.required, Validators.email]],
+    personalNumber: ['', [Validators.required]],
+    birthDate: ['', [Validators.required]],
+    status: ['', [Validators.required]],
+    category: ['', [Validators.required]],
   });
+
+  constructor(
+    private userService: UserService,
+    private formBuilder: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     if (this.user && this.formType === 'edit') {
@@ -53,9 +52,7 @@ export class UserFormComponent implements OnInit {
       this.userForm.setValue(user);
     }
 
-    if(this.formType === 'create') {
-      this.statuses$
-    }
+    this.options$ = this.userService.getStatusesAndCategories();
   }
 
   updateUser() {
@@ -65,6 +62,7 @@ export class UserFormComponent implements OnInit {
     };
     this.userUpdateEvent.emit(updatedUser);
   }
+
   createUser() {
     this.userCreateEvent.emit(this.userForm.value);
   }
