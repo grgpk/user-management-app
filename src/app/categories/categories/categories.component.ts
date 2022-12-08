@@ -71,8 +71,8 @@ export class CategoriesComponent
       .afterClosed()
       .pipe(
         mergeMap((data: string) => {
-          this.isLoading = true;
           if (data) {
+            this.isLoading = true;
             return this.categoryService.addCategory({ name: data });
           } else {
             return of();
@@ -100,8 +100,8 @@ export class CategoriesComponent
       .afterClosed()
       .pipe(
         mergeMap((updatedCategory: Category) => {
-          this.isLoading = true;
           if (updatedCategory) {
+            this.isLoading = true;
             return this.categoryService.updateCategory(updatedCategory);
           } else {
             return of();

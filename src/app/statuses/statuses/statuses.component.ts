@@ -69,8 +69,8 @@ export class StatusesComponent extends Unsubscribe implements OnInit {
       .afterClosed()
       .pipe(
         mergeMap((data: string) => {
-          this.isLoading = true;
           if (data) {
+            this.isLoading = true;
             return this.statusService.addStatus({ name: data });
           } else {
             return of();
@@ -94,8 +94,8 @@ export class StatusesComponent extends Unsubscribe implements OnInit {
       .afterClosed()
       .pipe(
         mergeMap((updatedStatus: Category) => {
-          this.isLoading = true;
           if (updatedStatus) {
+            this.isLoading = true;
             return this.statusService.updateStatus(updatedStatus);
           } else {
             return of();
